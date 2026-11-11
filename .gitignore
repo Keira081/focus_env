@@ -1,0 +1,13 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Private data — never commit
+*.db
+*.sqlite
+secrets/
+.env
+credentials*.json
+token*.json
+data/

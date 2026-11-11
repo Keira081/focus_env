@@ -1,0 +1,84 @@
+site_groups:
+  streaming:
+    - 9anime.win
+    - kickassanime.com.es
+    - bilibili.tv
+    - hdtodayz.to
+    - movieboxpro.app
+    - animepahe.pw
+  youtube:
+    - youtube.com
+
+day_groups:
+  standard_days:
+    - monday
+    - tuesday
+    - wednesday
+    - thursday
+    - friday
+    - sunday
+  relaxed_days:
+    - saturday
+
+schedules:
+  entertainment:
+    - day_group: standard_days
+      start: "20:00"
+      end: "00:00"
+    - day_group: relaxed_days
+      start: "18:00"
+      end: "01:00"
+
+viewing_limits:
+  unproductive_youtube:
+    - day_group: standard_days
+      minutes: 90
+    - day_group: relaxed_days
+      minutes: 180
+
+rules:
+  - id: IG1
+    name: "Instagram DMs Only"
+    match:
+      domain: instagram.com
+      paths: ["/", "/explore*", "/reels*"]
+    action:
+      type: redirect
+      to: https://www.instagram.com/direct/inbox/
+
+  - id: ST1
+    name: "Streaming window"
+    match:
+      site_group: streaming
+    when:
+      outside_schedule: entertainment
+    action:
+      type: redirect
+      to: dashboard
+
+  - id: YT5
+    name: "Unproductive Youtube Viewing limit"
+    match:
+      site_group: youtube
+      path: "/watch*"
+      video_label: other
+    when:
+      outside_schedule: entertainment
+    action:
+      type: redirect
+      to: "https://www.youtube.com/"
+
+  - id: YT5
+    name: "Unproductive Youtube Viewing limit"
+    match:
+      site_group: youtube
+      path: "/watch*"
+      video_label: other
+    when:
+      in_schedule: entertainment
+    action:
+      type: limit
+      viewing_limits: unproductive_youtube
+      then:
+        type: redirect
+        to: "https://www.youtube.com/"
